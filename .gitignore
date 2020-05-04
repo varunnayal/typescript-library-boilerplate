@@ -1,7 +1,7 @@
 ### Custom Entries ###
 
 # Build directory(tsconfig, package.json)
-lib
+/lib/**/*
 
 # Mocha Reports
 testresults
