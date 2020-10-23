@@ -1,10 +1,8 @@
 name: typescript_boilerplate
-
 on:
   push:
     branches:
       - master
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -12,20 +10,16 @@ jobs:
       - uses: actions/checkout@v2
       - name: "registry setup"
         uses: actions/setup-node@v1
-        with:
-          node-version: "12.x"
-          registry-url: "https://npm.pkg.github.com"
-          scope: "@buddy-git"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: install
-        run: npm install
+        run: npm ci
+      - name: lint
+        run: npm run lint:fix
       - name: build
         run: npm run build
-      - name: eslint
-        run: npm run lint
-      - name: publish
-        run: npm publish
+      - name: semantic-release
+        run: npx semantic-release
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
