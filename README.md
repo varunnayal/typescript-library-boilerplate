@@ -44,3 +44,4 @@ Following scripts can be used:
 ## Other Docs
 
 - [tooling setup](docs/tooling.md)
+- [workflow](https://docs.github.com/en/free-pro-team@latest/actions/managing-workflow-runs/adding-a-workflow-status-badge)

@@ -1,5 +1,5 @@
 module.exports = {
   reporter: 'mochawesome',
   require: ['ts-node/register'],
-  'reporter-options': 'reportDir=testresults',
+  'reporter-options': 'reportDir=coverage/mochawesome',
 };
