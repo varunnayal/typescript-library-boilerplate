@@ -13,6 +13,7 @@
     "cov": "./node_modules/.bin/nyc ./node_modules/.bin/mocha src/**/*.spec.ts",
     "prebuild": "rm -rf dist",
     "build": "./node_modules/.bin/tsc -p .",
+    "postbuild": "cp package*json dist/.",
     "prepublishOnly": "npm run cov && npm run build -- --clean",
     "publish": "echo \"TODO\"",
     "format": "./node_modules/.bin/prettier --write **/*.ts",
@@ -23,6 +24,9 @@
     "dev:test": "npm run test && open coverage/testresults/mochawesome.html",
     "dev:cov": "npm run cov && open coverage/testresultsmochawesome.html && open coverage/index.html",
     "all": "npm run format && npm run lint && npm test && npm run build"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
   },
   "author": "Varun Nayal",
   "license": "ISC",
