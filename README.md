@@ -1,5 +1,7 @@
 # LIBRARY NAME
 
+![release](https://github.com/Buddy-Git/typescript-library-boilerplate/workflows/Release%20WFA/badge.svg)
+
 ## Development
 
 - Run `nvm use` to use the node version being used for development
@@ -18,6 +20,11 @@ Following scripts can be used:
 - `npm run test`: To run test using `mocha` suite.
 - `npm run cov`: To run tests and generate code coverage reports.
 - `npm run dev:test:mac` and `npm run dev:cov:mac` to run test or coverage and open html files.
+
+## CI/CD
+
+- Using GitHub Actions with [semantic-release](https://github.com/semantic-release/semantic-release).
+- To bypass CI/CD, add a commit containing `[skip ci]` text.
 
 ## TODO
 

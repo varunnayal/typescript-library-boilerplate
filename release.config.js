@@ -5,7 +5,7 @@ module.exports = {
         [
             '@semantic-release/changelog',
             {
-                  changelogFile: 'docs/CHANGELOG.md',
+                changelogFile: 'docs/CHANGELOG.md',
                 changelogTitle:
                     '# Changelog\n\nAll notable changes to this project will be documented in this file. See\n[Conventional Commits](https://conventionalcommits.org) for commit guidelines.',
             },

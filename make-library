@@ -1,0 +1,162 @@
+#!/usr/bin/env node
+
+const readline = require('readline');
+const fs = require('fs');
+const path = require('path');
+var child_process = require('child_process');
+
+// Colors
+const Color_Off = '\033[0m';
+const Green = '\033[0;32m';
+const Cyan = '\033[0;36m';
+const BBlue = '\033[1;34m';
+const getFile = (...file) => path.relative(__dirname, path.join(...file));
+
+const { devDependencies, ...packageJson } = require('./package.json');
+const env = {
+    NAME: '',
+    DESC: '',
+    AUTHOR: '',
+    VERSIONS: '12',
+};
+
+for (const envKey of ['NAME', 'DESC', 'AUTHOR', 'VERSIONS']) {
+    env[envKey] = (process.env[envKey] || '').trim() || env[envKey];
+    if (!env[envKey]) {
+        console.error(`Env ${envKey} is required`);
+        process.exit(1);
+    }
+}
+env.VERSIONS = env.VERSIONS.split(',')
+    .map((version) => version.trim())
+    .map((version) => {
+        if (['10', '12', '14', '16'].indexOf(version) === false) {
+            throw new Error(`Invalid NodeJS version: ${version}`);
+        }
+        return parseInt(version);
+    })
+    .sort()
+    .join(', ');
+
+const gitRepo = `https://github.com/Buddy-Git/${env.NAME}`;
+const libName = `@buddy-git/${env.NAME}`;
+const npmInstallCmd = `npm install -D ${Object.keys(devDependencies).join(' ')}`;
+const gitSetupCmd = `rm -rf .git && git init . && git remote add origin ${gitRepo} && git add -A && rm -rf .git/hooks && git ci 'Initial Commit [skip ci]' && npm i -D husky`;
+const clearLibFileContentsCmd = `cp /dev/null ${getFile('src', 'index.ts')} && cp /dev/null ${getFile(
+    'test',
+    'index.ts'
+)}`;
+const removeUnwantedFilesCmd = `rm make-library && rm make-library.md`;
+
+console.log(`
+Making library with following attributes:
+  Library              : ${BBlue}${env.NAME}${Color_Off}
+  Lib Name             : ${Green}${libName}${Color_Off}
+  Description          : ${Green}${env.DESC}${Color_Off}
+  Git Repository       : ${Green}${gitRepo}${Color_Off}
+  NodeJS WFA Versions  : ${Green}${env.VERSIONS}${Color_Off}
+
+
+  Git Setup Command       : ${Cyan}${gitSetupCmd}${Color_Off}
+  Clear Lib File Contents : ${Cyan}${clearLibFileContentsCmd}${Color_Off}
+  Remove Unwanted Files   : ${Cyan}${removeUnwantedFilesCmd}${Color_Off}
+  NPM Install Command     : ${Cyan}${npmInstallCmd}${Color_Off}
+`);
+
+function updateLibraryName() {
+    ['README.md'].forEach((fileName) => {
+        const filePath = getFile(fileName);
+        fs.writeFileSync(
+            filePath,
+            fs.readFileSync(filePath, { encoding: 'utf-8' }).replace(/typescript-library-boilerplate/g, libName)
+        );
+    });
+}
+
+function updatePackageJson() {
+    packageJson.name = libName;
+    packageJson.description = env.DESC;
+    packageJson.repository.url = gitRepo;
+    packageJson.author = env.AUTHOR;
+
+    console.log('Updating package.json');
+    fs.writeFileSync(getFile('package.json'), JSON.stringify(packageJson, null, 2), { encoding: 'utf-8' });
+    console.log(' ...done');
+}
+
+function installDep() {
+    console.log(`Installing Dev Dep\n    ${npmInstallCmd}`);
+    child_process.execSync(npmInstallCmd, {
+        stdio: [0, 1, 2],
+    });
+    console.log(' ...done');
+}
+
+function setupWorkflow() {
+    if (env.VERSIONS === '12') {
+        return console.log('Workflow NodeJS matrix already set to v12');
+    }
+    console.log(`Setting Workflow NodeJS matrix to ${env.VERSIONS}`);
+    const wfaFile = getFile('.github', 'workflows', 'release.yml');
+    const newWfaYaml = fs
+        .readFileSync(wfaFile, 'utf-8')
+        .replace('node: [12]', `node: [${env.VERSIONS}]`)
+        .replace('node-version: 12', `node-version: ${env.VERSIONS.split(', ')[0]}`);
+    fs.writeFileSync(wfaFile, newWfaYaml, { encoding: 'utf-8' });
+    console.log(' ...done');
+}
+
+function clearLibFileContent() {
+    console.log(`Clear lib file contents\n    ${clearLibFileContentsCmd}`);
+    child_process.execSync(clearLibFileContentsCmd, { stdio: [0, 1, 2] });
+    console.log('  ...done');
+}
+
+function removeUnwantedFiles() {
+    console.log(`Remove unwatned files\n    ${removeUnwantedFilesCmd}`);
+    child_process.execSync(removeUnwantedFilesCmd, { stdio: [0, 1, 2] });
+    console.log('  ...done');
+}
+
+function setupGit() {
+    console.log('Setup Git');
+    console.log(`    ${gitSetupCmd}`);
+    child_process.execSync(gitSetupCmd, {
+        stdio: [0, 1, 2],
+    });
+}
+
+(async () => {
+    await (async () => {
+        const rl = readline.createInterface({
+            input: process.stdin,
+            output: process.stdout,
+        });
+        const ask = (question) => new Promise((resolve) => rl.question(question, resolve));
+
+        let yn = await ask('Do you wish to proceed: (y/n)? ');
+        do {
+            if (yn === 'y') {
+                rl.close();
+                break;
+            } else if (yn === 'n') {
+                rl.close();
+                process.exit(2);
+            } else {
+                yn = await ask('Please answer: (y/n)? ');
+            }
+        } while (true);
+    })();
+
+    console.log('Building library...');
+
+    updateLibraryName();
+    updatePackageJson();
+    installDep();
+    setupWorkflow();
+    clearLibFileContent();
+    removeUnwantedFiles();
+    setupGit();
+
+    console.log(`\nRun git push -u origin master`);
+})();
