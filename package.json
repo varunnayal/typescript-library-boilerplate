@@ -11,7 +11,8 @@
   "scripts": {
     "test": "./node_modules/.bin/nyc mocha test/**/*.ts",
     "cov": "./node_modules/.bin/nyc ./node_modules/.bin/mocha test/**/*.ts",
-    "prebuild": "rm -rf dist",
+    "clean": "rm -rf dist",
+    "prebuild": "npm run clean",
     "build": "./node_modules/.bin/tsc -p .",
     "postbuild": "cp package*json dist/.",
     "publish": "echo \"TODO\"",

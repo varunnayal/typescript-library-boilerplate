@@ -29,24 +29,6 @@ Following scripts can be used:
 ## TODO
 
 - [ ] Add VSCode workspace extension configuration file containing `Prettier`.
-- [ ]  Package release workflow including
-
-  For release workflow we would want to:
-
-  - Generate `CHANGELOG.md`
-  - **Automatically** handles semantic versioning, for a version `<major>`.`<minor>`.`<patch>`
-    - Updates `major` when there are breaking changes.(Having `BREAKING CHANGE:` text in `body` or `footer` section)
-    - Updates `minor` for new features.(`feat:` commit)
-    - Updates `patch` for bug fixes.(`fix:` commit)
-  - Generate release notes
-  - Integrate with CI/CD pipeline, if any
-  - Publish on various channels like [GitHub Release](https://help.github.com/en/github/administering-a-repository/about-releases) or `npm`.
-
-  Choices we have for release workflow:
-
-  - `auto-changelog`: Just generated changelog. Supports custom changelog templates.
-  - `semantic-release`: It is a fully automated library/system for versioning, changelog generation, git tagging, and publishing to the npm registry.
-  - `standard-version`: It handles the versioning, changelog generation, and git tagging for you without automatic pushing (to GitHub) or publishing (to an npm registry). Use of standard-version only affects your local git repo - it doesn't affect remote resources at all. After you run standard-version, you still have to ability to review things and correct mistakes if you want to. [Diff with semantic-release](https://github.com/conventional-changelog/standard-version/issues/22).
 
 ## Other Docs
 
