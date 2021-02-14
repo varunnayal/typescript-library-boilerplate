@@ -4,7 +4,6 @@
   "description": "A boilerplate for writing library in typescript",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "private": true,
   "repository": {
     "type": "git",
     "url": "https://github.com/Buddy-Git/typescript-library-boilerplate"
