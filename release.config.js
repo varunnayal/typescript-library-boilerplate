@@ -14,6 +14,7 @@ module.exports = {
             '@semantic-release/npm',
             {
                 pkgRoot: 'dist',
+                npmPublish: false,
                 tarballDir: 'pack',
             },
         ],
@@ -27,7 +28,7 @@ module.exports = {
             '@semantic-release/git',
             {
                 message: 'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}',
-                assets: ['docs/CHANGELOG.md'],
+                assets: ['package.json', 'package-lock.json', 'docs/CHANGELOG.md'],
             },
         ],
     ],
