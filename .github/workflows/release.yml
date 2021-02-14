@@ -5,6 +5,7 @@ on:
             - master
             - beta
             - next
+            - varun-personal/next
 jobs:
     test-publish:
         name: Test

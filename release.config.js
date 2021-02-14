@@ -1,4 +1,13 @@
 module.exports = {
+    branches: [
+        '+([0-9])?(.{+([0-9]),x}).x',
+        'master',
+        'next',
+        'next-major',
+        { name: 'beta', prerelease: true },
+        { name: 'alpha', prerelease: true },
+        { name: 'varun-personal/next', prerelease: true, channel: 'varun-personal-next' },
+    ],
     plugins: [
         '@semantic-release/commit-analyzer',
         '@semantic-release/release-notes-generator',
@@ -13,7 +22,7 @@ module.exports = {
         [
             '@semantic-release/npm',
             {
-                pkgRoot: 'dist',
+                // pkgRoot: 'dist',
                 npmPublish: false,
                 tarballDir: 'pack',
             },
@@ -21,7 +30,7 @@ module.exports = {
         [
             '@semantic-release/github',
             {
-                assets: ['pack/*.tgz'],
+                assets: ['*.tgz'],
             },
         ],
         [

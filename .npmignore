@@ -2,8 +2,8 @@
 *
 !src
 !dist
-!dist/**/*.map
-!dist/**/*.ts
+#!dist/**/*.map
+#!dist/**/*.ts
 !package*.json
 !docs/CHANGELOG.md
 !README.md
