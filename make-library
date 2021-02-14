@@ -11,12 +11,20 @@ const Green = '\033[0;32m';
 const Cyan = '\033[0;36m';
 const BBlue = '\033[1;34m';
 const getFile = (...file) => path.relative(__dirname, path.join(...file));
+const readDir = (filterFile, ...dir) =>
+    fs
+        .readdirSync(path.join(...dir))
+        .filter((file) => file !== '.' && file !== '..')
+        .map((file) => path.join(...dir, file))
+        .filter((file) => file !== '.' && file !== '..' && fs.lstatSync(file).isFile() === true)
+        .filter(filterFile);
 
 const { devDependencies, ...packageJson } = require('./package.json');
 const env = {
     NAME: '',
     DESC: '',
     AUTHOR: '',
+    SKIP_DEP_UPDATE: '',
     VERSIONS: '12',
 };
 
@@ -55,6 +63,7 @@ Making library with following attributes:
   Description          : ${Green}${env.DESC}${Color_Off}
   Git Repository       : ${Green}${gitRepo}${Color_Off}
   NodeJS WFA Versions  : ${Green}${env.VERSIONS}${Color_Off}
+  NodeJS Update Deps   : ${Green}${env.SKIP_DEP_UPDATE !== '1' ? 'Yes' : 'NO'}${Color_Off}
 
 
   Git Setup Command       : ${Cyan}${gitSetupCmd}${Color_Off}
@@ -85,6 +94,9 @@ function updatePackageJson() {
 }
 
 function installDep() {
+    if (env.SKIP_DEP_UPDATE === '1') {
+        return;
+    }
     console.log(`Installing Dev Dep\n    ${npmInstallCmd}`);
     child_process.execSync(npmInstallCmd, {
         stdio: [0, 1, 2],
@@ -97,12 +109,15 @@ function setupWorkflow() {
         return console.log('Workflow NodeJS matrix already set to v12');
     }
     console.log(`Setting Workflow NodeJS matrix to ${env.VERSIONS}`);
-    const wfaFile = getFile('.github', 'workflows', 'release.yml');
-    const newWfaYaml = fs
-        .readFileSync(wfaFile, 'utf-8')
-        .replace('node: [12]', `node: [${env.VERSIONS}]`)
-        .replace('node-version: 12', `node-version: ${env.VERSIONS.split(', ')[0]}`);
-    fs.writeFileSync(wfaFile, newWfaYaml, { encoding: 'utf-8' });
+
+    readDir((file) => file.endsWith('.yml'), '.github', 'workflows').forEach((yamlFile) => {
+        console.log(`Release: ${yamlFile}`);
+        const newWfaYaml = fs
+            .readFileSync(yamlFile, 'utf-8')
+            .replace('node: [12]', `node: [${env.VERSIONS}]`)
+            .replace('node-version: 12', `node-version: ${env.VERSIONS.split(', ')[0]}`);
+        fs.writeFileSync(yamlFile, newWfaYaml, { encoding: 'utf-8' });
+    });
     console.log(' ...done');
 }
 
