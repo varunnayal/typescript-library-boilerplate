@@ -1,6 +1,6 @@
 # LIBRARY NAME
 
-![release](https://github.com/Buddy-Git/typescript-library-boilerplate/workflows/Release%20WFA/badge.svg)
+![release](https://github.com/Buddy-Git/typescript-library-boilerplate/workflows/Release%20WFA/badge.svg) ![beta](https://github.com/Buddy-Git/typescript-library-boilerplate/workflows/Release%20WFA/badge.svg?branch=beta)
 ![beta](https://github.com/Buddy-Git/typescript-library-boilerplate/workflows/Release%20WFA%20-%20Beta/badge.svg)
 
 ## Development
@@ -11,6 +11,8 @@
 To run in watch mode use
 
 `npm run dev`.
+
+Ensure you run `husky install`.
 
 ## Unit Tests
 

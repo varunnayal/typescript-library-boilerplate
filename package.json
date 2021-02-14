@@ -16,7 +16,9 @@
     "prebuild": "npm run clean",
     "build": "./node_modules/.bin/tsc -p .",
     "postbuild": "cp package*json dist/.",
+    "prepublishOnly": "pinst --disable",
     "publish": "echo \"TODO\"",
+    "postpublish": "pinst --enable",
     "format": "./node_modules/.bin/prettier --write **/*.ts",
     "format-check": "./node_modules/.bin/prettier --check **/*.ts",
     "lint": "./node_modules/.bin/eslint . --ignore-path .gitignore --ext .js,.ts",
@@ -24,8 +26,7 @@
     "dev": "./node_modules/.bin/tsc -p . -w",
     "dev:test": "npm run test && open coverage/testresults/mochawesome.html",
     "dev:cov": "npm run cov && open coverage/testresultsmochawesome.html && open coverage/index.html",
-    "all": "npm run format && npm run lint && npm test && npm run build",
-    "postinstall": "husky install"
+    "all": "npm run format && npm run lint && npm test && npm run build"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
@@ -57,6 +58,7 @@
     "mocha": "^8.2.0",
     "mochawesome": "^6.1.1",
     "nyc": "^15.1.0",
+    "pinst": "^2.1.4",
     "prettier": "^2.1.2",
     "sinon": "^9.2.0",
     "ts-node": "^9.0.0",
