@@ -14,7 +14,6 @@
     "clean": "rm -rf dist",
     "prebuild": "npm run clean",
     "build": "./node_modules/.bin/tsc -p .",
-    "postbuild": "false && cp package*json dist/.",
     "prepublishOnly": "pinst --disable && pwd && ls -ltrha && (cat package.json 2&> /dev/null || echo NoPackageJson) && (ls -ltrh dist 2&> /dev/null || echo No Dist) && (cat dist/package.json 2&> /dev/null || echo DistNoPackageJson)",
     "publish": "echo \"TODO\"",
     "postpublish": "pinst --enable && pwd && ls -ltrha && (cat package.json 2&> /dev/null || echo NoPackageJson) && (ls -ltrh dist 2&> /dev/null || echo No Dist) && (cat dist/package.json 2&> /dev/null || echo DistNoPackageJson)",
